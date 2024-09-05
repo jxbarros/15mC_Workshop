@@ -1,0 +1,220 @@
+---
+title: "Computing accessibility with R5R - Tutorial"
+author: "Barros, Joana and Saraiva, Marcus"
+date: "29/08/2024"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Accessibility metrics measure the ease with which opportunities, such as
+jobs, healthcare, and education facilities, can be reached by an individual from 
+a particular location. 
+
+One of the simplest forms of accessibility metrics is called cumulative-opportunities, 
+which counts all of the opportunities accessible from a location within a ore-selected period of time (cutoff time). 
+Even though this workshop focuses on the 15 minute city, we will start by using other cutoff times that are traditionally used in accessibility measurement and at the end we will look into changing the parameters for our calculations to explore aspects relevant to the 15 minute city. 
+
+This tutorial will take you thought the various steps to compute calculate accessibility metrics in R using the 
+free and open-source called r5r [`r5r` package](https://ipeagit.github.io/r5r/index.html).
+`r5r`  provides a simple and friendly interface to R5, a very fast and open source Java-based multi-modal routing engine developed by [Conveyal](https://www.conveyal.com/).
+R5 stands for [Rapid Realistic Routing on Real-world and Reimagined networks](https://github.com/conveyal/r5).
+
+For this tutorial, we will use a subset of the Greater London Authority (GLA) 
+area comprised by London's Inner Boroughs. 
+The reason we will be working with a subset of London is that the processing power required to compute accessibility to the entire London is great, and usually more than computers on university labs tend to support. 
+
+## Obtaining the input data
+
+Two input datasets are required to build a multi-modal transport network:
+
+1.  road network dataset from OpenStreetMap, used for routing of walking, 
+    cycling and driving trips, as well as access to public transport stations 
+    and stops;
+2.  public transport schedules in GTFS format;
+
+Both datasets are freely available for the Greater London Authority area. The road
+network can be downloaded from [Geofabrik](download.geofabrik.de) daily extracts, 
+and London's GTFS feeds are provided by the UK's [Department for Transportation](https://data.bus-data.dft.gov.uk/) open data portal. 
+
+This exercise will be restricted to the Inner London area, and the files can be 
+downloaded by running the following chunk of code:
+
+```{r}
+piggyback::pb_download("inner-london-latest.osm.pbf", 
+                       repo = "mvpsaraiva/r5r_gla", 
+                       dest = here::here("data_inner"))
+
+piggyback::pb_download("itm_london_gtfs.zip", 
+                       repo = "mvpsaraiva/r5r_gla", 
+                       dest = here::here("data_inner"))
+```
+
+We also need information on the location and number of opportunities in the study
+area, as well as the geographic locations of places where people live and that we
+want to evaluate. The data used in this tutorial, in geopackage format, is provided
+in the `data_inner` folder of this repository. There are two files in that folder:
+
+1.  `od_zones_inner_gla.gpkg`: MSOA zones of inner London boroughs;
+2.  `od_points_inner_gla.gpkg`: lat/lon coordinates of the centroids of the MSOAs.
+
+The following sections will show how to load those datasets and calculate the
+accessibility at London's MSOAs.
+MSOAs stand for Middle Super Output Areas and are one of the spatial units of the UK Census.
+
+## Setup and Initialisation
+
+### Load necessary libraries
+
+Before we start using `r5r`, we need to increase the memory available to Java. 
+This is necessary because, by default, `R` allocates only 512MB of memory for
+Java processes, which is not enough for large queries using `r5r`. To
+increase available memory to 6GB, for example, we need to set the
+`java.parameters` option, as follows:
+
+```{r echo=TRUE, message=FALSE}
+options(java.parameters = "-Xmx6G")
+```
+
+Then we can load the packages used in this tutorial:
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(r5r)
+library(tidyverse)
+library(sf)
+library(data.table)
+library(ggplot2)
+library(mapview)
+```
+
+### Load input data
+
+The following code loads the  MSOAs geometries and centroids:
+
+```{r include=FALSE}
+od_zones <- st_read(here::here("data_inner", "od_zones_inner_gla.gpkg"))
+od_points_sf <- st_read(here::here("data_inner", "od_points_inner_gla.gpkg")) %>% 
+  st_cast(to = "POINT")
+```
+
+The centroids dataset (`od_points_sf`) contains the following required fields:
+
+1. id: unique identifier of each location;
+2. jobs: number of jobs in each location (obs: any kind of opportunity can be
+   considered, not neccessarily jobs);
+3. geom: the POINT geometry of each location, in WGS 84 CRS.
+
+The code below shows the contents of `od_points_sf`:
+
+```{r}
+od_points_sf
+```
+
+### Visualising input data
+
+We can use the `mapview` package to open an interactive map of the input points:
+
+```{r}
+mapview(od_points_sf, zcol="jobs")
+```
+
+## Calculating and visualising accessibility
+
+### Build R5 multi-modal network
+
+Finally, we can use the `setup_r5` function from `r5r` to build a routing network and load it into memory.
+The `r5r_core` object returned by `setup_r5` contains all we need for the next steps.
+The code will combine the data on the road network and the schedule from public transport data (GTFS) to produce a multi-modal transport network.
+
+```{r include=FALSE}
+r5r_core <- setup_r5(here::here("data_inner"), verbose = FALSE, temp_dir = TRUE)
+```
+
+### Calculating accessibility
+
+Now that everything is in place, we can compute accessibility to jobs with a 
+single line of R code:
+
+```{r}
+access_df <- accessibility(r5r_core,
+                           origins = od_points_sf,
+                           destinations = od_points_sf,
+                           opportunities_colname = "jobs",
+                           mode = c("WALK", "TRANSIT"),
+                           departure_datetime = as.POSIXct("02-03-2022 09:00:00", 
+                                                           format = "%d-%m-%Y %H:%M:%S"),
+                           cutoffs = c(30, 45),
+                           verbose = FALSE,
+                           progress = TRUE)
+```
+
+The `accessibility` function above takes the following parameters:
+
+-  `r5r_core`: the variable created by `setup_r5` that contains the R5 routing
+   network and engine in memory;
+-  `origins` and `destinations`: the points representing origins and destinations 
+   of trips. 
+-  `opportunities_colname`: the name of the column in the `destination` points
+   dataset that contains the opportunities we are calculating access to (in this
+   case, `jobs`);
+-  `mode`: transport modes to be considered, where `TRANSIT` includes all modes
+   of public transportation (such as busses, the underground, commuter trains,
+   and so on);
+-  `departure_datetime`: the day and time of the start of the trips. For public
+   transport trips, the date must be inside the range available in the GTFS
+   data provided. 
+-  `cutoffs`: the travel times, in minutes, that we are calculating cumulative-
+   opportunities accessibility metrics.
+-  `verbose = FALSE`: reduces the amount of outputs to the R console;
+-  `progress = TRUE`: shows the progress of the calculation;
+   
+### Visualising results
+
+Finally, to see the results, we need to join the results of the `accessibility` 
+function with the geometry of the input zones. This can be done in R as well:
+
+```{r}
+access_sf <- left_join(od_zones, access_df, by = c("code"="id"), multiple = "all")
+```
+
+We can plot the results and visualise how many jobs people can access in 30 and
+45 minutes of travel time, using London's public transport system.
+
+```{r}
+access_sf %>%
+  ggplot(aes(fill=accessibility/1000)) +
+  geom_sf(aes(geometry=geom), size=0.2) +
+  coord_sf(datum=NA) +
+  scale_fill_distiller(palette = "Spectral") +
+  labs(fill = "Accessibility\nJobs (x1000)") +
+  theme_light() +
+  theme(legend.position = "bottom") +
+  facet_wrap(~cutoff, labeller = labeller(cutoff = function(s) return(paste(s, "minutes"))))
+```
+We will now save the maps produced as png images in your folder:
+
+```{r}
+ggsave(here::here("output", "map_inner_gla_access.png"), dpi = 300, width = 20, height = 15, units = "cm")
+```
+
+and save the shapefile containing the accessibility results to your folder, so you can open it using QGIS and create alternative maps.
+Try to open the file and produce a choropleth (graduated colours) map using 10 classes and 'natural breaks' classification method.
+
+```{r}
+st_write(access_sf, here::here("output", "inner_gla_access.shp"))
+```
+
+Now that you have completed this tutorial, you can try changing the parameters of the accessibility and checking the changes in output to explore how accessibility results can inform the feasibility of a 15min city.
+
+Here are some of the changes you can try using the dataset for inner_London:
+
+- Cut-off times: We have calculated the accessibility for 30 and 45 min. Yet, the cutoff time for the 15 minute city is 15 minutes. Let's try to see what the accessibility of places is using 15 and 20 minutes. 
+
+- transport modes: The above calculated used 'transit', which means a combination of all available public transport and walking. As we know, the 15minute city concept emphasises the use of active transport modes, which is walking and cycling.  Let's compute accessibility for active modes and then compare them with transit, or only bus, or metro, to understand the impact of travelling using different transport modes.
+
+- departure time: you can also change the departure times and see if it affects your results, and what modes are more affected.
+
