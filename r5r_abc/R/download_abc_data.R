@@ -1,5 +1,6 @@
-# Download Open Street Map road network data from GitHub repository
+install.packages('geobr')
 
+# Download Open Street Map road network data from GitHub repository
 abc_pbf_url <- "https://github.com/jxbarros/15mC_Workshop/releases/download/v1/abc.osm.pbf"
 dir.create(here::here('data'))
 download.file(abc_pbf_url, destfile = here::here("data/abc.osm.pbf"))
@@ -41,3 +42,5 @@ sf::st_write(censo_abc, here::here('data/censo_abc.gpkg'))
 centroid_abc <- sf::st_centroid(censo_abc)
 mapview::mapview(centroid_abc)
 sf::st_write(centroid_abc, here::here('data/centroid_abc.gpkg'))
+
+
