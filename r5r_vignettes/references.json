@@ -1,0 +1,568 @@
+[
+	{
+		"id": "padgham2019dodgr",
+		"type": "article-journal",
+		"container-title": "Transport Findings",
+		"DOI": "10.32866/6945",
+		"note": "publisher: Network Design Lab",
+		"title": "dodgr: An R Package for Network Flow Aggregation",
+		"author": [
+			{
+				"family": "Padgham",
+				"given": "Mark"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2019"
+				]
+			],
+			"season": "02-14"
+		}
+	},
+	{
+		"id": "larsen2011travel",
+		"type": "article-journal",
+		"container-title": "Transportation Research Part D: Transport and Environment",
+		"DOI": "10.1016/j.trd.2010.07.011",
+		"ISSN": "13619209",
+		"issue": "2",
+		"journalAbbreviation": "Transportation Research Part D: Transport and Environment",
+		"language": "en",
+		"page": "172-177",
+		"source": "DOI.org (Crossref)",
+		"title": "A travel behavior analysis of urban cycling facilities in Montreal, Canada",
+		"URL": "https://linkinghub.elsevier.com/retrieve/pii/S1361920910001100",
+		"volume": "16",
+		"author": [
+			{
+				"family": "Larsen",
+				"given": "Jacob"
+			},
+			{
+				"family": "El-Geneidy",
+				"given": "Ahmed"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2011",
+					3
+				]
+			]
+		}
+	},
+	{
+		"id": "zhu2015people",
+		"type": "article-journal",
+		"container-title": "PLOS ONE",
+		"DOI": "10.1371/journal.pone.0134322",
+		"ISSN": "1932-6203",
+		"issue": "8",
+		"journalAbbreviation": "PLoS ONE",
+		"language": "en",
+		"page": "e0134322",
+		"source": "DOI.org (Crossref)",
+		"title": "Do People Use the Shortest Path? An Empirical Test of Wardrop's First Principle",
+		"title-short": "Do People Use the Shortest Path?",
+		"URL": "https://dx.plos.org/10.1371/journal.pone.0134322",
+		"volume": "10",
+		"author": [
+			{
+				"family": "Zhu",
+				"given": "Shanjiang"
+			},
+			{
+				"family": "Levinson",
+				"given": "David"
+			}
+		],
+		"editor": [
+			{
+				"family": "Ropert-Coudert",
+				"given": "Yan"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2015",
+					8,
+					12
+				]
+			]
+		}
+	},
+	{
+		"id": "conway2019getting",
+		"type": "article-journal",
+		"container-title": "International Journal of Geographical Information Science",
+		"DOI": "10.1080/13658816.2019.1605075",
+		"ISSN": "1365-8816, 1362-3087",
+		"issue": "9",
+		"journalAbbreviation": "International Journal of Geographical Information Science",
+		"language": "en",
+		"page": "1759-1787",
+		"source": "DOI.org (Crossref)",
+		"title": "Getting Charlie off the MTA: a multiobjective optimization method to account for cost constraints in public transit accessibility metrics",
+		"title-short": "Getting Charlie off the MTA",
+		"URL": "https://www.tandfonline.com/doi/full/10.1080/13658816.2019.1605075",
+		"volume": "33",
+		"author": [
+			{
+				"family": "Conway",
+				"given": "Matthew Wigginton"
+			},
+			{
+				"family": "Stewart",
+				"given": "Anson F."
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2019",
+					9,
+					2
+				]
+			]
+		}
+	},
+	{
+		"id": "conway2017evidencebased",
+		"type": "article-journal",
+		"container-title": "Transportation Research Record: Journal of the Transportation Research Board",
+		"DOI": "10.3141/2653-06",
+		"ISSN": "0361-1981, 2169-4052",
+		"issue": "1",
+		"journalAbbreviation": "Transportation Research Record",
+		"language": "en",
+		"page": "45-53",
+		"source": "DOI.org (Crossref)",
+		"title": "Evidence-Based Transit and Land Use Sketch Planning Using Interactive Accessibility Methods on Combined Schedule and Headway-Based Networks",
+		"URL": "http://journals.sagepub.com/doi/10.3141/2653-06",
+		"volume": "2653",
+		"author": [
+			{
+				"family": "Conway",
+				"given": "Matthew Wigginton"
+			},
+			{
+				"family": "Byrd",
+				"given": "Andrew"
+			},
+			{
+				"family": "Linden",
+				"given": "Marco",
+				"non-dropping-particle": "van der"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2017",
+					1
+				]
+			]
+		}
+	},
+  {"id":"morgan2019opentripplanner","abstract":"Morgan et al., (2019). OpenTripPlanner for R. Journal of Open Source Software, 4(44), 1926, https://doi.org/10.21105/joss.01926","accessed":{"date-parts":[[2021,2,24]]},"author":[{"family":"Morgan","given":"Malcolm"},{"family":"Young","given":"Marcus"},{"family":"Lovelace","given":"Robin"},{"family":"Hama","given":"Layik"}],"container-title":"Journal of Open Source Software","DOI":"10.21105/joss.01926","ISSN":"2475-9066","issue":"44","issued":{"date-parts":[[2019,12,2]]},"language":"en","page":"1926","source":"joss.theoj.org","title":"OpenTripPlanner for R","type":"article-journal","URL":"https://joss.theoj.org/papers/10.21105/joss.01926","volume":"4"},
+	{
+		"id": "conway2018accounting",
+		"type": "article-journal",
+		"container-title": "Journal of Transport and Land Use",
+		"DOI": "10.5198/jtlu.2018.1074",
+		"ISSN": "1938-7849",
+		"issue": "1",
+		"journalAbbreviation": "JTLU",
+		"source": "DOI.org (Crossref)",
+		"title": "Accounting for uncertainty and variation in accessibility metrics for public transport sketch planning",
+		"URL": "https://www.jtlu.org/index.php/jtlu/article/view/1074",
+		"volume": "11",
+		"author": [
+			{
+				"family": "Conway",
+				"given": "Matthew Wigginton"
+			},
+			{
+				"family": "Byrd",
+				"given": "Andrew"
+			},
+			{
+				"family": "van Eggermond",
+				"given": "Michael"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2018",
+					7,
+					23
+				]
+			]
+		}
+	},
+	{
+		"id": "lovelace2019stplanr",
+		"type": "article-journal",
+		"container-title": "The R Journal",
+		"DOI": "10.32614/RJ-2018-053",
+		"ISSN": "2073-4859",
+		"issue": "2",
+		"journalAbbreviation": "The R Journal",
+		"language": "en",
+		"page": "7",
+		"source": "DOI.org (Crossref)",
+		"title": "stplanr: A Package for Transport Planning",
+		"title-short": "stplanr",
+		"URL": "https://journal.r-project.org/archive/2018/RJ-2018-053/index.html",
+		"volume": "10",
+		"author": [
+			{
+				"family": "Lovelace",
+				"given": "Robin"
+			},
+			{
+				"family": "Ellison",
+				"given": "Richard"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2019"
+				]
+			]
+		}
+	},
+	{
+		"id": "opentripplanneropentripplanner",
+		"type": "webpage",
+		"title": "OpenTripPlanner",
+		"URL": "http://www.opentripplanner.org/",
+		"author": [
+			{
+				"family": "OpenTripPlanner",
+				"given": ""
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					9,
+					17
+				]
+			]
+		}
+	},
+	{
+		"id": "delling2015roundbased",
+		"type": "article-journal",
+		"container-title": "Transportation Science",
+		"DOI": "10.1287/trsc.2014.0534",
+		"ISSN": "0041-1655, 1526-5447",
+		"issue": "3",
+		"journalAbbreviation": "Transportation Science",
+		"language": "en",
+		"page": "591-604",
+		"source": "DOI.org (Crossref)",
+		"title": "Round-Based Public Transit Routing",
+		"URL": "http://pubsonline.informs.org/doi/10.1287/trsc.2014.0534",
+		"volume": "49",
+		"author": [
+			{
+				"family": "Delling",
+				"given": "Daniel"
+			},
+			{
+				"family": "Pajor",
+				"given": "Thomas"
+			},
+			{
+				"family": "Werneck",
+				"given": "Renato F."
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2020",
+					10,
+					22
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2015",
+					8
+				]
+			]
+		}
+	},
+ {
+      "id":"stepniak2019impact",
+      "accessed":{
+         "date-parts":[
+            [
+               2021,
+               1,
+               14
+            ]
+         ]
+      },
+      "author":[
+         {
+            "family":"Stepniak",
+            "given":"Marcin"
+         },
+         {
+            "family":"Pritchard",
+            "given":"John P."
+         },
+         {
+            "family":"Geurs",
+            "given":"Karst T."
+         },
+         {
+            "family":"Goliszek",
+            "given":"Slawomir"
+         }
+      ],
+      "container-title":"Journal of Transport Geography",
+      "container-title-short":"Journal of Transport Geography",
+      "DOI":"10.1016/j.jtrangeo.2019.01.007",
+      "ISSN":"0966-6923",
+      "issued":{
+         "date-parts":[
+            [
+               2019,
+               2,
+               1
+            ]
+         ]
+      },
+      "language":"en",
+      "page":"8-24",
+      "source":"ScienceDirect",
+      "title":"The impact of temporal resolution on public transport accessibility measurement: Review and case study in Poland",
+      "title-short":"The impact of temporal resolution on public transport accessibility measurement",
+      "type":"article-journal",
+      "URL":"http://www.sciencedirect.com/science/article/pii/S0966692318305209",
+      "volume":"75"
+   },
+   	{
+		"id": "levinson2020manual",
+		"type": "article-journal",
+		"language": "en",
+		"note": "Accepted: 2020-11-05\npublisher: Committee of the Transport Access Manual, University of Sydney",
+		"source": "ses.library.usyd.edu.au",
+		"title": "Transport Access Manual: A Guide for Measuring Connection between People and Places",
+		"title-short": "Transport Access Manual",
+		"URL": "https://ses.library.usyd.edu.au/handle/2123/23733",
+		"author": [
+			{
+				"family": "Levinson",
+				"given": "David"
+			},
+			{
+				"family": "et al.",
+				"given": ""
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2021",
+					1,
+					18
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2020",
+					1,
+					1
+				]
+			]
+		}
+	},
+	 {
+    "id": "wessel2017constructing",
+    "author": [
+      {
+        "family": "Wessel",
+        "given": "Nate"
+      },
+      {
+        "family": "Allen",
+        "given": "Jeff"
+      },
+      {
+        "family": "Farber",
+        "given": "Steven"
+      }
+    ],
+    "container-title": "Journal of Transport Geography",
+    "container-title-short": "Journal of Transport Geography",
+    "DOI": "10.1016/j.jtrangeo.2017.04.012",
+    "issued": {
+      "date-parts": [
+        [
+          2017,
+          6,
+          9
+        ]
+      ]
+    },
+    "page": "92-97",
+    "title": "Constructing a routable retrospective transit timetable from a real-time vehicle location feed and GTFS",
+    "type": "article-journal",
+    "URL": "http://dx.doi.org/10.1016/j.jtrangeo.2017.04.012",
+    "volume": "62"
+  },
+
+  {
+		"id": "pereiramtup2019",
+		"type": "article-journal",
+		"container-title": "Journal of Transport Geography",
+		"DOI": "10.1016/j.jtrangeo.2018.12.005",
+		"ISSN": "0966-6923",
+		"journalAbbreviation": "Journal of Transport Geography",
+		"page": "321-332",
+		"source": "ScienceDirect",
+		"title": "Future accessibility impacts of transport policy scenarios: Equity and sensitivity to travel time thresholds for Bus Rapid Transit expansion in Rio de Janeiro",
+		"title-short": "Future accessibility impacts of transport policy scenarios",
+		"URL": "http://www.sciencedirect.com/science/article/pii/S0966692318302047",
+		"volume": "74",
+		"author": [
+			{
+				"family": "Pereira",
+				"given": "Rafael H. M."
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2018",
+					12,
+					29
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2019",
+					1,
+					1
+				]
+			]
+		}
+	},
+	{
+		"id": "stewart2022half",
+		"type": "article-journal",
+		"container-title": "Environment and Planning B: Urban Analytics and City Science",
+		"DOI": "10.1177/23998083221137077",
+		"ISSN": "2399-8083",
+		"language": "en",
+		"note": "publisher: SAGE Publications Ltd STM",
+		"page": "23998083221137077",
+		"source": "SAGE Journals",
+		"title": "Half-(head)way there: Comparing two methods to account for public transport waiting time in accessibility indicators",
+		"title-short": "Half-(head)way there",
+		"URL": "https://doi.org/10.1177/23998083221137077",
+		"author": [
+			{
+				"family": "Stewart",
+				"given": "Anson F"
+			},
+			{
+				"family": "Byrd",
+				"given": "Andrew M"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2023",
+					1,
+					18
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2022",
+					11,
+					30
+				]
+			]
+		}
+	}
+
+
+]
