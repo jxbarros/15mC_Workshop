@@ -11,6 +11,9 @@ vignette: >
 bibliography: references.json
 ---
 
+Notes: accessibility vignettes + inequality https://ipeagit.github.io/intro_access_book/3_calculando_acesso.en.html 
+id in the tables are called differently 
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -208,6 +211,53 @@ ggplot(na.omit(access.interp)) +
   labs(fill = "Number of\nfacilities within\n20 minutes") +
   theme_void() +
   facet_wrap(~opportunity)
+```
+
+### Inequalities in accessibility distribution
+
+```{r, message = FALSE}
+# download population and socioeconomic data
+poa_population <- aopdata::read_population("Porto Alegre", showProgress = FALSE)
+
+# renames the columns with population count and income decile data
+data.table::setnames(
+  poa_population,
+  old = c("P001", "R003"),
+  new = c("pop_count", "decile")
+)
+
+# merge accessibility and population tables
+sociodemographic_access <- merge(
+  spatial_access,
+  poa_population,
+  by = "id_hex"
+)
+
+head(sociodemographic_access[, c("id_hex", "schools", "pop_count", "decile")])
+```
+
+
+```{r, message = FALSE}
+# plot inequality by population income decile  
+ggplot(subset(sociodemographic_access, !is.na(decile))) +
+  geom_boxplot(
+    aes(
+      x = as.factor(decile),
+      y = schools,
+      color = as.factor(decile),
+      weight = pop_count
+    )
+  ) +
+  labs(
+    color = "Income\ndecile",
+    x = "Income decile",
+    y = "Accessible schools"
+  ) +
+  scale_color_brewer(palette = "RdBu") +
+  scale_x_discrete(
+    labels = c("D1\npoorest", paste0("D", 2:9), "D10\nwealthiest")
+  ) +
+  theme_minimal()
 ```
 
 
