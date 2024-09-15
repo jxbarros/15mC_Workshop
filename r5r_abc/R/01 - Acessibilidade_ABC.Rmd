@@ -32,7 +32,7 @@ recorte da área de estudo foi feito utilizando o site [Protomaps](https://app.p
 ```{r}
 # Download Open Street Map road network data from GitHub repository
 abc_pbf_url <- "https://github.com/jxbarros/15mC_Workshop/releases/download/v1/abc.osm.pbf"
-download.file(abc_pbf_url, destfile = here::here("data/network/abc.osm.pbf"))
+download.file(abc_pbf_url, destfile = here::here("data/network/abc.osm.pbf"), mode = "wb")
 ```
 
 Setores censitários com informação de renda domiciliar do Censo de 2010, e 
@@ -41,20 +41,20 @@ viagens.
 
 ```{r}
 download.file('https://github.com/jxbarros/15mC_Workshop/releases/download/v1/censo_abc.gpkg', 
-              destfile = here::here("data/censo_abc.gpkg"))
+              destfile = here::here("data/censo_abc.gpkg"), mode = "wb")
 
 download.file('https://github.com/jxbarros/15mC_Workshop/releases/download/v1/centroids_abc.gpkg', 
-              destfile = here::here("data/centroids_abc.gpkg"))
+              destfile = here::here("data/centroids_abc.gpkg"), mode = "wb")
 ```
 
 Localização das escolas e equipamentos de saúde da RMSP, disponibilizados pelo CEM.
 
 ```{r}
 download.file('https://github.com/jxbarros/15mC_Workshop/releases/download/v1/escolas.gpkg', 
-              destfile = here::here("data/escolas.gpkg"))
+              destfile = here::here("data/escolas.gpkg"), mode = "wb")
 
 download.file('https://github.com/jxbarros/15mC_Workshop/releases/download/v1/saude.gpkg', 
-              destfile = here::here("data/saude.gpkg"))
+              destfile = here::here("data/saude.gpkg"), mode = "wb")
 ```
 
 
