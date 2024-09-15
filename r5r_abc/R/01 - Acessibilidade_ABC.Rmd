@@ -1,0 +1,233 @@
+---
+title: "Acessibilidade ABC"
+output: html_document
+date: "2024-09-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introdução
+
+Este tutorial vai demonstrar como calcular medidas de acessibilidade usando R e 
+bibliotecas de código aberto.
+
+## Download dos dados de entrada
+
+Esta seção contém o código para baixar os dados necessários para a análise, e 
+só precisa ser executada uma vez.
+
+Os dados foram preparados previamente e salvos no GitHub do workshop.
+
+```{r}
+# criar a pasta onde será feito o download dos dados
+dir.create(here::here('data'))
+dir.create(here::here('data/network'))
+```
+
+Rede viária das cidades do ABC Paulista, disponíveis no OpenStreetMap. O 
+recorte da área de estudo foi feito utilizando o site [Protomaps](https://app.protomaps.com/).
+
+```{r}
+# Download Open Street Map road network data from GitHub repository
+abc_pbf_url <- "https://github.com/jxbarros/15mC_Workshop/releases/download/v1/abc.osm.pbf"
+download.file(abc_pbf_url, destfile = here::here("data/network/abc.osm.pbf"))
+```
+
+Setores censitários com informação de renda domiciliar do Censo de 2010, e 
+centróides dos setores censitários que serão usados como pontos de origem das 
+viagens.
+
+```{r}
+download.file('https://github.com/jxbarros/15mC_Workshop/releases/download/v1/censo_abc.gpkg', 
+              destfile = here::here("data/censo_abc.gpkg"))
+
+download.file('https://github.com/jxbarros/15mC_Workshop/releases/download/v1/centroids_abc.gpkg', 
+              destfile = here::here("data/centroids_abc.gpkg"))
+```
+
+Localização das escolas e equipamentos de saúde da RMSP, disponibilizados pelo CEM.
+
+```{r}
+download.file('https://github.com/jxbarros/15mC_Workshop/releases/download/v1/escolas.gpkg', 
+              destfile = here::here("data/escolas.gpkg"))
+
+download.file('https://github.com/jxbarros/15mC_Workshop/releases/download/v1/saude.gpkg', 
+              destfile = here::here("data/saude.gpkg"))
+```
+
+
+## Explorando os dados
+
+Primeiro, vamos carregar os dados do censo para a memória. Utilizaremos o pacote `sf` 
+(Simple Features) para leitura e tratamento de dados espaciais, e o pacote `here`
+para lidar corretamente com o caminho dos arquivos na pasta de trabalho.
+
+```{r}
+# ajustando o sistema de coordenadas para compatibilidade com o r5r
+censo_abc_sf <- sf::st_read(here::here('data/censo_abc.gpkg')) |> sf::st_set_crs(4326)
+
+# ajustando o sistema de coordenadas para compatibilidade com o r5r
+centroids_abc_sf <- sf::st_read(here::here('data/centroids_abc.gpkg')) |> 
+  sf::st_set_crs(4326) |> 
+  dplyr::rename(id = code_tract)
+```
+Para visualizar os dados em um mapa interativo, podemos utilizar o pacote `mapview`.
+
+```{r}
+mapview::mapview(censo_abc_sf, zcol = 'name_muni')
+```
+
+O `sf` do censo contém dados de renda, tanto a renda média domiciliar do setor
+quanto o decil de renda ao qual o setor pertence dentro da área de trabalho. Podemos
+utilizar o `mapview` para visualizar essa informação. No mapa abaixo, as áreas de
+mais alta renda aparecem em tons de amarelo, enquanto os tons de violeta representam
+áreas de renda mais baixa.
+
+```{r}
+mapview::mapview(censo_abc_sf, zcol = 'RendaDecil')
+```
+
+Agora vamos carregar os dados de saúde.
+
+```{r}
+saude_sf <- sf::st_read(here::here('data/saude.gpkg'))
+```
+Com o comando abaixo, podemos visualizar os equipamentos de saúde sobrepostos
+ao mapa dos municípios.
+
+```{r}
+mapview::mapview(censo_abc_sf, zcol = 'name_muni') +
+  mapview::mapview(saude_sf)
+
+```
+
+
+## Calculating e visualizando acessibilidade
+
+Nesta seção, utilizaremos o `r5r` para calcular acessibilidade aos equipamentos 
+de saúde do ABC.
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(r5r)
+library(tidyverse)
+library(sf)
+library(data.table)
+library(ggplot2)
+library(mapview)
+```
+
+### Build R5 multi-modal network
+
+We can use the `setup_r5` function from `r5r` to build a routing network
+and load it into memory. The `r5r_core` object returned by `setup_r5` contains 
+all we need for the next steps.
+
+```{r include=FALSE}
+r5r_core <- setup_r5(here::here("data/network"), verbose = FALSE)
+```
+
+
+### Calculating accessibility
+
+Agora podemos calcular a acessibilidade a saúde, utilizando a função `accessibility`
+do `r5r`. Esta função recebe como entrada os pontos de origem das viagens, no caso
+os centroides dos setores censitários, e os pontos onde se localizam as oportunidades,
+no caso os equipamentos de saúde. Como cada linha no dataset representa um
+equipamento de saúde, precisamos adicionar uma coluna chamada chamada `oportunidades` 
+(qualquer nome serve) com o valor fixo de 1, e passar essa coluna para a função.
+Caso tivéssemos dados detalhados como, por exemplo, número de leitos por equipamento,
+poderíamos utilizar essa informação para o cálculo da acessibilidade.
+
+```{r}
+# é necessário um atributo com o número de oportunidades de cada linha
+saude_sf$oportunidades <- 1
+# também é necessário que exista uma coluna com o nome 'id' minúsculo
+saude_sf$id <- saude_sf$ID
+```
+
+```{r include=FALSE}
+access_df <- accessibility(r5r_core,
+                           origins = centroids_abc_sf,
+                           destinations = saude_sf,
+                           opportunities_colname = "oportunidades", # coluna criada acima
+                           mode = c("WALK"),
+                           cutoffs = c(15, 30),
+                           verbose = FALSE,
+                           progress = TRUE)
+```
+
+The `accessibility` function above takes the following parameters:
+
+-  `r5r_core`: the variable created by `setup_r5` that contains the R5 routing
+   network and engine in memory;
+-  `origins` and `destinations`: the points representing origins and destinations 
+   of trips. 
+-  `opportunities_colname`: the name of the column in the `destination` points
+   dataset that contains the opportunities we are calculating access to (in this
+   case, `oportunidades`);
+-  `mode`: transport modes to be considered, where `TRANSIT` includes all modes
+   of public transportation (such as busses, the underground, commuter trains,
+   and so on);
+-  `departure_datetime`: the day and time of the start of the trips. For public
+   transport trips, the date must be inside the range available in the GTFS
+   data provided. 
+-  `cutoffs`: the travel times, in minutes, that we are calculating cumulative-
+   opportunities accessibility metrics.
+-  `verbose = FALSE`: reduces the amountof outputs to the R console;
+-  `progress = TRUE`: shows the progress of the calculation;
+   
+### Visualising results
+
+Finally, to see the results, we need to join the results of the `accessibility` 
+function with the geometry of the input zones. This can be done in R as well:
+
+```{r}
+access_sf <- left_join(censo_abc_sf, access_df, by = c("code_tract"="id"))
+```
+
+We can plot the results and visualise how many jobs people can access in 15 and
+30 minutes of walk time.
+
+```{r}
+access_sf %>%
+  ggplot(aes(fill=accessibility)) +
+  geom_sf(aes(geometry=geom), size=0.2) +
+  coord_sf(datum=NA) +
+  scale_fill_distiller(palette = "Spectral") +
+  labs(fill = "Accessibility\nHealth") +
+  theme_light() +
+  theme(legend.position = "bottom") +
+  facet_wrap(~cutoff, labeller = labeller(cutoff = function(s) return(paste(s, "minutes"))))
+```
+
+## Visualizando desigualdades
+
+Primeiro, precisamos fazer o join entre os dados sociodemograficos do censo com
+os resultados da acessibilidade:
+
+
+```{r}
+access_sf |> 
+  sf::st_drop_geometry() |> 
+  filter(!is.na(RendaDecil)) |> 
+  # filter(cutoff == 30) |> 
+  ggplot() +
+  geom_boxplot(aes(x = as.factor(RendaDecil), 
+                   y = accessibility,
+                   color=as.factor(RendaDecil))) +
+  labs(color = "Decil de renda", x = "Decil de renda", y = "Equip. de saúde acessíveis") +
+  scale_color_brewer(palette = "RdBu") +
+  scale_x_discrete(
+   labels = c("D1\npoorest", paste0("D", 2:9), "D10\nwealthiest")
+  ) +
+  facet_wrap(~cutoff, ncol=1) +
+  theme_minimal()
+
+```
+
+
+
+
